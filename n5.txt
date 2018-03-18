@@ -1,0 +1,216 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+template <class T>
+class Spectacle
+{
+protected:
+	string name, author;
+	T year;
+
+public:
+	friend istream& operator >> (istream& a, Spectacle<T>& s);
+	friend ostream& operator<<(ostream& a, const Spectacle<T>& s);
+	Spectacle();
+	Spectacle(string n, string a, T y);
+	Spectacle(const Spectacle<T> &s);
+	~Spectacle();
+	void NewName();//функция изменения названия
+	void NewYear();//функция изменения года написания
+	virtual void AllInform();//функция вывода всей информации
+};
+
+
+
+template <class T>
+class Actors : public Spectacle<T>
+{
+protected:
+	T* actor;
+	int x;
+public:
+	void AllInform();
+	void NewInform();
+	void NewActors();
+	Actors();// конструктор по умолчанию
+	Actors(string n, string a, T y, T g);
+	Actors(const Actors<T> &s);//конструктор копирования, наследующий контр из род класса
+	~Actors();
+};
+
+template <class T> Spectacle<T>::Spectacle()
+{
+	name = "Pygmalion";
+	author = "George Bernard Shaw";
+	year = 1913;
+};
+template <class T> Spectacle<T>::Spectacle(string n, string a, T y)
+{
+	name = n;
+	year = y;
+	author = a;
+};
+
+template <class T> Spectacle<T>::Spectacle(const Spectacle<T> &s)
+{
+	name = s.name;
+	year = s.year;
+}
+
+template <class T> void Spectacle<T>::NewName()//изм названия
+{
+	cout << "Enter a new name of Spectacle, please:" << endl;
+	cin >> name;
+};
+
+template <class T> void Spectacle<T>::NewYear()//изм года написания
+{
+	cout << "Enter a new year of writting, please:" << endl;
+	cin >> year;
+
+};
+template <class T> Spectacle<T>::~Spectacle()
+{
+	cout << "destruktor using here";
+};
+
+template <class T> void Spectacle<T>::AllInform()
+{
+	cout << "The name of spectacle is: " << name << endl;
+	cout << "Author of spectacle is: " << author << endl;
+	cout << "Spectacle was written in: " << year << endl;
+};
+
+
+template <class T> ostream& operator<<(ostream& a, const Spectacle<T>& s)
+{
+	a << "Speclacle (" << s.name << " " << s.year << " " << s.author << ")\n";
+	return a;
+
+};
+
+
+template <class T> istream& operator >> (istream& a, Spectacle<T>& s)
+{
+	cout << "enter name" << endl;
+	a >> s.name;
+	cout << "Enter year" << endl;
+	a >> s.year;
+	cout << "Enter author" << endl;
+	a >> s.author;
+	return a;
+}
+
+
+
+
+
+
+
+
+
+template <class T> Actors<T>::Actors(const Actors<T>&s) :Spectacle<T>(s)
+{
+	x = s.x;
+	actor = new T[x];
+	for (int i = 0; i < x; i++)
+	{
+		actor[i] = s.actor[i];
+	}
+}
+
+template <class T> Actors<T> ::Actors(string n, string a, T y, T g) : Spectacle<T>(n, a, y)
+{
+	x = g;
+	actor = new T[x];
+	for (int i = 0; i < g; i++)
+	{
+		cin >> actor[i];
+	}
+
+}
+
+template <class T> Actors<T>::Actors()
+{
+	x = 4;
+	actor = new T[x];
+	actor[0] = "Evanika";
+	actor[1] = "Nellita";
+	actor[2] = "Sharon";
+	actor[3] = "Coulle";
+}
+
+template <class T> void Actors<T>::NewInform()
+{
+	int anw;
+	cout << "If you want to get new data choose 1, if not, choose 0:" << endl;
+	cin >> anw;
+	if (anw == 1)
+	{
+		for (int i = 0; i < x; i++)
+		{
+			cout << "New name for actor number " << i << ":" << endl;
+			cin >> actor[i];
+		}
+	}
+}
+
+
+template <class T> void Actors<T>::AllInform()
+{
+	Spectacle::AllInform();
+	cout << "Actors is: " << endl;
+	for (int i = 0; i < x; i++)
+	{
+		cout << actor[i] << endl;
+	}
+
+}
+template <class T> void Actors<T>::NewActors()
+{
+	delete[] actor;
+	cout << "Enter new number of actors: " << endl;
+	cin >> x;
+	actor = new T[x];
+	for (int i = 0; i < x; i++)
+	{
+		cout << "Enter the name of actor " << i << endl;
+		cin >> actor[i];
+	}
+}
+template <class T> Actors<T>::~Actors()
+{
+	delete[] actor;
+}
+
+
+
+
+
+
+-----------------------------------------------------
+#include "Header.h"
+#include <iostream>
+#include <string>
+
+using namespace std;
+int main()
+{
+
+	Spectacle<float> Antigona;
+	Antigona.AllInform();
+	cout << "      " << endl;
+	Antigona.NewName();
+	Antigona.NewYear();
+	Antigona.AllInform();
+	cout << "      " << endl;
+	Actors<string> Dante;
+	Dante.AllInform();
+	Dante.NewActors();
+	Dante.AllInform();
+	system("pause");
+	return 0;
+
+}
